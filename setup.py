@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '2.0.0dev'
+version = '2.0.0'
 
 setup(name='redturtle.subsites',
       version=version,

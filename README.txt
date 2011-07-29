@@ -19,29 +19,29 @@ So, if you are looking for a complete subsite product for Plone, let try other p
 __ http://pypi.python.org/pypi/collective.lineage/
 
 Note also that a lot of magic described later (like apply a Plone theme on-the-fly using Apache) are possible
-in Plone out-of-the-box.
+with Apache + Plone out-of-the-box.
 
 What is a subsite ?
 -------------------
 
-In this environment *a subsite is a section of your Plone site* that:
+In this document **a subsite is a section of your Plone site** that:
 
 * need (commonly) a different theme applied
 * the visitor surf the subsite accessing something like *domain.com/subsite*, *subsite.com*
-  or *subdomain.mycompany.com*
-* the visitor can be not aware that he is visiting a subsection or a bigger site
+  or *subdomain.domain.com*
+* the visitor can be not aware that he's visiting a subsection of a bigger site
 * site contributors (commonly) access the site through a *back-end.domain.com* domain
-* site contributor (can) see a different Plone theme
-* site contributors (commonly) see the whole site, not only the subsite
+* site contributors (can) see a different Plone theme
+* site contributors (commonly) see the whole site, not only the subsite (as far as they use the back-end URL)
 
 Note that this approach is not limited to a single subsite, but you can have more than once. All subsites are
 edited using a **back-end URL**, then visited using some **front-end URLs**
 
 Note also that you can continue having front-end contributors, but they are limited to the subsite when move
-in and out of folders, using TinyMCE, and so on. Again, the could not know that the are using a Plone subsite.
+in and out of folders, using TinyMCE, and so on. Again, they could not know that are inside Plone subsite.
 
-Why you need a subsite?
------------------------
+You really need a subsite?
+--------------------------
 
 If you *dont'* need a Plone site where...
 
@@ -53,6 +53,13 @@ If you *dont'* need a Plone site where...
 
 But if one of the behavior above are true, keep reading.
 
+Subsite sometimes is only matter of theme
+-----------------------------------------
+
+If the concept of subsite inside your organization don't require "isolation" (of navigation, of breadcrumb,
+portal tabs, TinyMCE use, ...) probably you only need the Apache + Plone magic described there, not this
+(or other) subsite product.
+
 Create a subsite Plone theme
 ============================
 
@@ -62,7 +69,7 @@ to customize your Apache rewrite rules.
 All is based on some behavior already inside Plone, like the power to apply a Plone theme adding an HTTP header
 that Plone will handle in a special way.
 
-Also you will play no more with the Plone *Default theme* option under the *Theme settings* site setup section,
+Also you will play no more with the Plone "*Default theme*" option under the "*Theme settings*" site setup section,
 or simply you will use this option only for the back-end theme.
 
 A full example available
@@ -159,9 +166,9 @@ In the example above:
 * the Zope instance is on the same server of Apache, and run on port 8080
   (obviously this can change)
 * ``Plone`` is the id of the Plone site (change with yours)
-* ``subsite`` is the name of the subsite folder, placed in the Plone site root
+* ``subsite`` is the name of the subsite folder, here placed in the Plone site root
 * ``The name of the Theme`` is the registered name of your theme (like ``Sunburst Theme`` or
-  ``Plone Classic Theme``
+  ``Plone Classic Theme``)
 
 RequestHeader
 -------------
@@ -240,7 +247,8 @@ Additional products
 ===================
 
 If you like also to manage portal tab of your subsites in a different way that isn't the standard Plone
-behavior, take a look at `collective.navroottabs`__
+behavior, take a look at `collective.navroottabs`__. With this you will be able also to customize different
+portal tabs for your subsites. 
 
 __ http://plone.org/products/collective.navroottabs
 

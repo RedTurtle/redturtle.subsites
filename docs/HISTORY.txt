@@ -1,9 +1,10 @@
 Changelog
 =========
 
-2.0.0 (Unreleased)
+2.0.0 (2011-07-29)
 ------------------
 
+* First public release
 * Plone 4 (maybe also 3.3 but not 3.2 or lower for sure) compatibility [keul]
 * z3c.autoincude support [keul]
 * Bye bye p4a.subtyper [keul]
