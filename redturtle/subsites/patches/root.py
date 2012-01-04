@@ -17,7 +17,7 @@ def getNavigationRoot(context, relativeRoot=None):
     relativeRoot, use this. If the property is not set or is set to '/', use 
     the portal root.
     """
-
+    
     portal_url = getToolByName(context, 'portal_url')
     
     if not relativeRoot:
