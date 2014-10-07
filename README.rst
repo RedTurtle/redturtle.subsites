@@ -213,10 +213,6 @@ the configuration is complex because you need to handle both in the same ``.conf
         SetEnvIf Request_URI "^/subsite(.*)" SUBSITE
         RequestHeader append plone_skin "The name of the Theme" env=SUBSITE
 
-        RewriteRule ^/subsite(.*) \
-        "http://127.0.0.1:8080/VirtualHostBase/http/%{SERVER_NAME}:80/Plone/VirtualHostRoot/subsite/$1" [L,P]
-        ProxyPassReverse /subsite http://127.0.0.1:8080/
-
         RewriteRule ^/(.*) \
         "http://127.0.0.1:8080/VirtualHostBase/http/%{SERVER_NAME}:80/Plone/VirtualHostRoot/$1" [L,P]
         ProxyPassReverse / http://127.0.0.1:8080/
