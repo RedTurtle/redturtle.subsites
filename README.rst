@@ -8,18 +8,15 @@ This subsite product add to Plone some minimalistic **subsite** feature.
 Before installing
 -----------------
 
-This product try to perform the task adding minimal code to Plone, but leaving the most part of the work
-to other software, in that case `Apache`__.
+This product try to perform the task adding minimal code to Plone but also need that part of the work
+will be done by other software, in that case `Apache`__.
 
 __ http://en.wikipedia.org/wiki/Apache_HTTP_Server 
 
-So, if you are looking for a complete subsite product for Plone, let try other products (like
+So, if you are looking for a complete and self-contained subsite product for Plone, let try other products (like
 `Lineage`__) before this.
 
 __ http://pypi.python.org/pypi/collective.lineage/
-
-Note also that a lot of magic described later (like apply a Plone theme on-the-fly using Apache) are possible
-with Apache + Plone out-of-the-box.
 
 What is a subsite ?
 -------------------
@@ -93,21 +90,25 @@ Commonly Plone themes have a file like ``plone_theme.mysite/plone_theme/mysite/b
 
 The file looks like this:
 
-    >>> from plone.theme.interfaces import IDefaultPloneLayer
-    >>> 
-    >>> class IThemeSpecific(IDefaultPloneLayer):
-    >>>     """Marker interface that defines a Zope 3 browser layer.
-    >>>     """
+.. code-block:: python
+
+    from plone.theme.interfaces import IDefaultPloneLayer
+    
+    class IThemeSpecific(IDefaultPloneLayer):
+        """Marker interface that defines a Zope 3 browser layer.
+        """
 
 You need to change the interface as follow:
 
-    >>> from redturtle.subsites.frontend.browser import IFrontendLayer
-    >>> 
-    >>> class IThemeSpecific(IFrontendLayer):
-    >>>     """Marker interface that defines a Zope 3 browser layer.
-    >>>     """
+.. code-block:: python
 
-See also http://svn.plone.org/svn/collective/example.rtsubsites_theme/trunk/example/rtsubsites_theme/browser/interfaces.py
+    from redturtle.subsites.frontend.browser import IFrontendLayer
+    
+    class IThemeSpecific(IFrontendLayer):
+        """Marker interface that defines a Zope 3 browser layer.
+        """
+
+See also https://github.com/RedTurtle/example.rtsubsites_theme/blob/master/example/rtsubsites_theme/browser/interfaces.py
 
 Other theme's components
 ------------------------
@@ -122,13 +123,16 @@ The logo viewlet provided with the product is customized, to take always the def
 
 If you need to customize the logo viewlet in your theme, please think about extend the redturtle.subsites ones:
 
-    >>> from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-    >>> from redturtle.subsites.frontend.viewlets.logo import LogoViewlet as BaseLogoViewlet
-    >>> 
-    >>> class LogoViewlet(BaseLogoViewlet):
-    >>>     ...
+.. code-block:: python
 
-See also http://svn.plone.org/svn/collective/example.rtsubsites_theme/trunk/example/rtsubsites_theme/browser/logo.py
+
+    from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+    from redturtle.subsites.frontend.viewlets.logo import LogoViewlet as BaseLogoViewlet
+     
+    class LogoViewlet(BaseLogoViewlet):
+         # do something here
+
+See also https://github.com/RedTurtle/example.rtsubsites_theme/blob/master/example/rtsubsites_theme/browser/logo.py
 
 Remember: you need to perform this task only if you need to customize the logo viewlet.
 
@@ -149,39 +153,17 @@ Apply the theme (AKA get a Subsite)
 We will show now what to add to your Apache configuration and transform all this in the subsite environment
 we need.
 
-RewriteRule
------------
-
-The most important part is to add a `RewriteRule`__
-
-__ http://httpd.apache.org/docs/current/mod/mod_rewrite.html#rewriterule
-
-You need to put something like this::
-
-    RewriteRule ^/(.*) \
-    "http://127.0.0.1:8080/VirtualHostBase/http/%{SERVER_NAME}:80/Plone/++skin++The name of the Theme/VirtualHostRoot/subsite/$1" [L,P]
-
-In the example above:
-
-* the Zope instance is on the same server of Apache, and run on port 8080
-  (obviously this can change)
-* ``Plone`` is the id of the Plone site (change with yours)
-* ``subsite`` is the name of the subsite folder, here placed in the Plone site root
-* ``The name of the Theme`` is the registered name of your theme (like ``Sunburst Theme`` or
-  ``Plone Classic Theme``)
-
 RequestHeader
 -------------
 
-This `RequestHeader`__ additional configuration in facts is only needed if you placed something in the ``skins``
-folder of your theme, so if you customized some CMF objects (main_template, site logo, ...).
+Starting from redturtle.subsites 2.1 whay our need is simple a `RequestHeader`__ additional configuration.
 
 __ http://httpd.apache.org/docs/2.0/mod/mod_headers.html#requestheader
 
-Also this only works if the ``request_varname`` of ``portal_skins`` tool will be changed from ``plone_skin`` to
+Note that this only works if the ``request_varname`` of ``portal_skins`` tool will be changed from ``plone_skin`` to
 ``HTTP_PLONE_SKIN``. You can do this manually from ZMI (*REQUEST variable name* field) or through Generic Setup
 (see
-http://svn.plone.org/svn/collective/example.rtsubsites_theme/trunk/example/rtsubsites_theme/profiles/default/skins.xml
+https://github.com/RedTurtle/example.rtsubsites_theme/blob/master/example/rtsubsites_theme/profiles/default/skins.xml
 ).
 
 You need to write something like this::
@@ -206,7 +188,7 @@ simple. You will provide to your Apache a ``subsite.com.conf`` file with somethi
         RequestHeader append plone_skin "The name of the Theme"
 
         RewriteRule ^/(.*) \
-        "http://127.0.0.1:8080/VirtualHostBase/http/%{SERVER_NAME}:80/Plone/++skin++The name of the Theme/VirtualHostRoot/subsite/$1" [L,P]
+        "http://127.0.0.1:8080/VirtualHostBase/http/%{SERVER_NAME}:80/Plone/VirtualHostRoot/subsite/$1" [L,P]
         ProxyPassReverse / http://127.0.0.1:8080/
         
         ...
@@ -232,7 +214,7 @@ the configuration is complex because you need to handle both in the same ``.conf
         RequestHeader append plone_skin "The name of the Theme" env=SUBSITE
 
         RewriteRule ^/subsite(.*) \
-        "http://127.0.0.1:8080/VirtualHostBase/http/%{SERVER_NAME}:80/Plone/++skin++The name of the Theme/VirtualHostRoot/subsite/$1" [L,P]
+        "http://127.0.0.1:8080/VirtualHostBase/http/%{SERVER_NAME}:80/Plone/VirtualHostRoot/subsite/$1" [L,P]
         ProxyPassReverse /subsite http://127.0.0.1:8080/
 
         RewriteRule ^/(.*) \
@@ -255,7 +237,7 @@ __ http://plone.org/products/collective.navroottabs
 Dependencies
 ============
 
-Tested on Plone 4, but probably working also on Plone 3.3 (not below).
+Tested on Plone 4.3.
 
 TODO
 ====
@@ -280,7 +262,6 @@ Authors
 
 This product was developed by RedTurtle Technology team.
 
-.. image:: http://www.redturtle.net/redturtle_banner.png
+.. image:: http://www.redturtle.it/redturtle_banner.png
    :alt: RedTurtle Technology Site
-   :target: http://www.redturtle.net/
-
+   :target: http://www.redturtle.it/

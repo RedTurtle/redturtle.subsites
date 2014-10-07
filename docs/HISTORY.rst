@@ -1,6 +1,13 @@
 Changelog
 =========
 
+2.1.0 (Unreleased)
+------------------
+
+- Removed old deprecated code [keul]
+- Added skinswitcher, now handle skin swith in Plone not Apache.
+  This will fix issue with Plone 4.1.5 and up [keul] 
+
 2.0.0 (2011-07-29)
 ------------------
 
