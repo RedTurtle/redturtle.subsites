@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.0 (Unreleased)
+2.1.0 (2014-10-10)
 ------------------
 
 - Removed old deprecated code [keul]
