@@ -5,8 +5,9 @@ Changelog
 ------------------
 
 - Removed old deprecated code [keul]
-- Added skinswitcher, now handle skin swith in Plone not Apache.
+- Added skinswitcher, now handle skin switch in Plone and not Apache.
   This will fix issue with Plone 4.1.5 and up [keul] 
+- Added MANIFEST file [keul]
 
 2.0.0 (2011-07-29)
 ------------------
